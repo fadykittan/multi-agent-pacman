@@ -163,11 +163,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
         def searchValue(state, depth):
-            if state.isWin() or state.isLose():
+            if state.isWin() or state.isLose() or (depth == self.depth*state.getNumAgents()):
                 return self.evaluationFunction(state)
-            if depth == self.depth*state.getNumAgents():
-                return self.evaluationFunction(state)
-            if depth % state.getNumAgents() == 0:
+            if depth % state.getNumAgents() == 0:  # check if the agent is pacman (man agent)
                 return maxValue(state, depth, depth % state.getNumAgents())
             else:
                 return minValue(state, depth, depth % state.getNumAgents())
