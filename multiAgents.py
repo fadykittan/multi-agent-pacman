@@ -295,7 +295,9 @@ def betterEvaluationFunction(currentGameState):
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
     evaluation function (question 5).
 
-    DESCRIPTION: <write something here so we know what you did>
+    DESCRIPTION: 
+    The same logic as question 1, but added into account 
+    the newScaredTimes and capsules 
     """
     "*** YOUR CODE HERE ***"
     newPos = currentGameState.getPacmanPosition()
