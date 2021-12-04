@@ -298,7 +298,63 @@ def betterEvaluationFunction(currentGameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    newPos = currentGameState.getPacmanPosition()
+    newFood = currentGameState.getFood()
+    newGhostStates = currentGameState.getGhostStates()
+    newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+    score = currentGameState.getScore()
+    capsules = currentGameState.getCapsules()
+
+    # Calculate Ghost Distance
+    ghostDistance = 0
+    for ghost in newGhostStates:
+        ghostDistance += manhattanDistance(newPos, ghost.getPosition())
+
+    # Calculate capsule distance
+    capsuleDistance = 0
+    if len(capsules) > 0 and max(newScaredTimes) > 25:
+        if ghostDistance < 2:
+            return -1000000000
+        else:
+            closestCapsule = 10000
+            for capsule in capsules:
+                capsuleDistance += manhattanDistance(capsule, newPos)
+                if capsuleDistance < closestCapsule:
+                    closestCapsule = capsuleDistance
+    else:
+        capsuleDistance = 10000000000000000
+
+    # Calculate food Distance and closest food
+    foodDistance = 0
+    closestFood = (1234, 5678)
+    for x in range(newFood.width):
+        for y in range(newFood.height):
+            if newFood[x][y]:
+                distance = manhattanDistance(newPos, (x, y))
+                foodDistance += distance
+                if distance < manhattanDistance(closestFood, newPos):
+                    closestFood = (x, y)
+    if closestFood != (1234, 5678):
+        closestFood = manhattanDistance(closestFood, newPos)
+
+    # Check and adjust variables
+    if ghostDistance < 2:
+        return -100000000000
+    elif foodDistance == 0:
+        return 100000000 * score
+    if foodDistance == 2:
+        return 1000000 * score
+    elif foodDistance == 1:
+        return 10000000 * score
+
+    # Result
+    value = 0
+    value += - foodDistance
+    value += - 10*closestFood**2
+    value += - 10/ghostDistance**2
+    value += score**3
+    value += 100000000 / (1 + capsuleDistance)
+    return value
 
 
 # Abbreviation
